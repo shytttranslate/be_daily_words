@@ -7,10 +7,24 @@ import nodemailer from 'nodemailer';
 export class DailyWordsService {
   constructor(private readonly config: ConfigService) {}
 
+  /** Chi tiết từ: gọi image word-difficulty (CEFR + SUBTLEX) */
+  async getWordDetail(word: string): Promise<{
+    word: string;
+    cefr_level: string | null;
+    cefr_level_meaning?: string | null;
+    cefr_level_float: number | null;
+    frequency: number | null;
+    freq_per_million: number | null;
+    cefr_error?: string;
+  }> {
+    return this.getWordDifficulty(word);
+  }
+
   /** Gọi container word-difficulty (CEFR + SUBTLEX) */
   async getWordDifficulty(word: string): Promise<{
     word: string;
     cefr_level: string | null;
+    cefr_level_meaning?: string | null;
     cefr_level_float: number | null;
     frequency: number | null;
     freq_per_million: number | null;

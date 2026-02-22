@@ -10,7 +10,9 @@ import { DictModule } from './dict/dict.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { UserController } from './user/user.controller';
 import { ShytttEmailModule } from './shyttt-email/shyttt-email.module';
-import { DailyWordsModule } from './daily_words/daily_words.module'
+import { DailyWordsModule } from './daily_words/daily_words.module';
+import { ToPhoneticModule } from './to-phonetic/to-phonetic.module';
+import { CambridgeModule } from './cambridge/cambridge.module';
 @Module({
   imports: [
     SharedModule,
@@ -28,7 +30,9 @@ import { DailyWordsModule } from './daily_words/daily_words.module'
     // TrackingModule,
     DictModule,
     ShytttEmailModule,
-    DailyWordsModule
+    DailyWordsModule,
+    ToPhoneticModule,
+    CambridgeModule,
   ],
   controllers: [AppController, UserController],
 

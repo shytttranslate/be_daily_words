@@ -11,6 +11,12 @@ export class DailyWordsController {
     return this.dailyWordsService.getWordDifficulty(word);
   }
 
+  /** Chi tiết từ: CEFR + SUBTLEX từ image word-difficulty */
+  @Get('/get-word-detail/:word')
+  async getWordDetail(@Param('word') word: string) {
+    return this.dailyWordsService.getWordDetail(word);
+  }
+
   @Post('/send')
   async sendEmail(@Body() body: unknown) {
     return this.dailyWordsService.sendEmail(body);

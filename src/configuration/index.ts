@@ -3,6 +3,14 @@ export default () => ({
   wordDifficulty: {
     baseUrl: process.env.WORD_DIFFICULTY_URL || 'http://localhost:8000',
   },
+  toPhonetic: {
+    apiUrl: process.env.TO_PHONETIC_API_URL || 'https://tophonetics.com/',
+  },
+  cambridge: {
+    baseUrl:
+      process.env.CAMBRIDGE_BASE_URL ||
+      'https://dictionary.cambridge.org/vi/dictionary/english',
+  },
   discord: {
     botToken: process.env.DISCORD_BOT_TOKEN,
     logChannel: process.env.DISCORD_LOG_CHANNEL,
