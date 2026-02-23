@@ -2,7 +2,6 @@
 FROM node:20-bookworm-slim AS node-builder
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
 COPY . .
 RUN npm run build
 
@@ -28,10 +27,10 @@ RUN pip3 install --no-cache-dir -r word_difficulty/requirements.txt
 
 # Download SUBTLEX-US at build time (optional; can also mount at runtime)
 RUN python3 -c "\
-from word_difficulty.subtlex_loader import ensure_subtlex_downloaded; \
-ensure_subtlex_downloaded(); \
-print('SUBTLEX ready'); \
-" 2>/dev/null || true
+    from word_difficulty.subtlex_loader import ensure_subtlex_downloaded; \
+    ensure_subtlex_downloaded(); \
+    print('SUBTLEX ready'); \
+    " 2>/dev/null || true
 
 COPY scripts/start.sh /app/scripts/start.sh
 RUN chmod +x /app/scripts/start.sh

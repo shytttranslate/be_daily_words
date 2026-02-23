@@ -10,8 +10,8 @@ services:
     environment:
       - WORD_DIFFICULTY_URL=http://word-difficulty:8000
     restart: unless-stopped
-    depends_on:
-      - word-difficulty
+    # depends_on:
+    #   - word-difficulty
     networks:
       - app-net
 
