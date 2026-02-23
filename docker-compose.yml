@@ -31,6 +31,20 @@ services:
     networks:
       - app-net
 
+  # word-difficulty:
+  #   build:
+  #     context: ./word_difficulty
+  #     dockerfile: Dockerfile
+  #   container_name: word-difficulty
+  #   ports:
+  #     - '8000:8000'
+  #   environment:
+  #     - SUBTLEX_PATH=/data
+  #     - PORT=8000
+  #   volumes:
+  #     - ./word_difficulty/data:/data
+  #   restart: unless-stopped
+  #   networks:
 networks:
   app-net:
     driver: bridge
