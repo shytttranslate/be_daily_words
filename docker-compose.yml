@@ -10,7 +10,7 @@ services:
       - .env
     environment:
       - WORD_DIFFCIULTY_URL=http://word-dfficulty:8000
-    restart: unless-stoppedi
+    restart: unless-stopped
     # depends_on:
     #   - word-difficulty
     networks:
