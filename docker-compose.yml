@@ -30,5 +30,5 @@ services:
   #   restart: unless-stopped
   #   networks:
 networks:
-  app-net:
+  global:
     external: true
