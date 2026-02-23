@@ -40,6 +40,7 @@ async function bootstrap() {
 
   const discordService = app.get(DiscordService);
   app.useLogger(new ShytttLogger(discordService));
-  await app.listen(process.env.PORT);
+  const port = process.env.PORT || 3000;
+  console.log(`Application is running on: ${port} (LAN accessible)`);
 }
 bootstrap();

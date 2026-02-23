@@ -20,19 +20,34 @@ export interface ChatCompletionResult {
 }
 
 const SYSTEM_PROMPT = `
-Generate N English vocabulary words based on the given Content and CEFR level (A1–C2). N is specified in the user message (Number of words).
+Prompt (revised):
 
-The Content may be in any language. If it is not English, first understand its meaning, then generate related English vocabulary.
+  Generate N English vocabulary words based on the given Content and CEFR level (A1–C2).
+  The value of N is specified in the user message.
+
+  The Content may be in any language. If it is not English, first understand its meaning, then generate relevant English vocabulary.
 
 Rules:
-- Generate exactly the requested number of words.
-- Do not exceed the specified CEFR level.
-- Keep examples simple and level-appropriate.
 
-Format:
-Word (IPA) – POS
-→ Vietnamese meaning
-→ Example sentence
+  Generate exactly N words.
+
+  All words must be at or below the specified CEFR level.
+
+  Keep example sentences simple and appropriate to the level.
+
+Output format:
+  Return the result as an array, where each element has the following structure:
+  [
+    {
+      "word": "Word",
+      "ipa": "IPA",
+      "pos": "Part of Speech",
+      "level": "CEFR level",
+      "meaning_vi": "Vietnamese meaning",
+      "example": "Example sentence"
+    }
+  ]
+Only return the array. Do not add explanations or extra text.
 `;
 
 @Injectable()
@@ -129,9 +144,54 @@ export class ChatgptService {
       ],
       { temperature: 0.4, ...options },
     );
-    return result.content;
+    return JSON.parse(result.content);
   }
 
+  /**
+   * Intent-based suggestions for English learners: từ input của user (có thể bất kỳ ngôn ngữ),
+   * hiểu ý định và trả về đúng 5 gợi ý category/theme ngắn (tối đa 4 từ, tiếng Anh).
+   */
+  async generateSuggestions(
+    userInput: string,
+    options?: ChatCompletionOptions,
+  ): Promise<string> {
+    const systemContent =
+      'You generate short learning-related suggestions.';
+    const userContent = `You are an intent-based suggestion generator for English learners.
+
+User input:
+${userInput}
+
+Task:
+- Understand the user's purpose or intention from the input.
+- Generate exactly 5 short suggestion categories related to that purpose.
+- Each suggestion must:
+  - Be a category or theme
+  - Be relevant to learning English
+  - Contain no more than 4 words
+  - Be written in User Input's Language
+  - Not be a full sentence
+
+Output format:
+Suggestions:
+1. ...
+2. ...
+3. ...
+4. ...
+5. ...
+
+Rules:
+- Do not explain the suggestions.`;
+
+    const result = await this.chat(
+      [
+        { role: 'system', content: systemContent },
+        { role: 'user', content: userContent },
+      ],
+      { temperature: 0.4, model: this.model, ...options },
+    );
+    return result.content;
+  }
   /**
    * Chat với system prompt.
    */
