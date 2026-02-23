@@ -2,6 +2,7 @@
 FROM node:20-bookworm-slim AS node-builder
 WORKDIR /app
 COPY package*.json ./
+RUN npm install
 COPY . .
 RUN npm run build
 
@@ -18,7 +19,7 @@ WORKDIR /app
 
 # NestJS
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 COPY --from=node-builder /app/dist ./dist
 
 # Python word_difficulty (cefrpy + SUBTLEX)
