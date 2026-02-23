@@ -14,24 +14,7 @@ services:
     # depends_on:
     #   - word-difficulty
     networks:
-      - app-net
-
-  word-difficulty:
-    build:
-      context: ./word_difficulty
-      dockerfile: Dockerfile
-    container_name: word-difficulty
-    ports:
-      - '8000:8000'
-    environment:
-      - SUBTLEX_PATH=/data
-      - PORT=8000
-    volumes:
-      - ./word_difficulty/data:/data
-    restart: unless-stopped
-    networks:
-      - app-net
-
+      - global
   # word-difficulty:
   #   build:
   #     context: ./word_difficulty
@@ -48,4 +31,4 @@ services:
   #   networks:
 networks:
   app-net:
-    driver: bridge
+    external: true
