@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   app:
+    container_name: aibit-api
     build: .
     working_dir: /app
     ports:
@@ -8,8 +9,8 @@ services:
     env_file:
       - .env
     environment:
-      - WORD_DIFFICULTY_URL=http://word-difficulty:8000
-    restart: unless-stopped
+      - WORD_DIFFCIULTY_URL=http://word-dfficulty:8000
+    restart: unless-stoppedi
     # depends_on:
     #   - word-difficulty
     networks:
