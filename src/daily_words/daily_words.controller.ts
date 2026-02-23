@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { DailyWordsService } from './daily_words.service';
 
+@ApiTags('Daily Words')
 @Controller('/mail')
 export class DailyWordsController {
   constructor(private readonly dailyWordsService: DailyWordsService) {}

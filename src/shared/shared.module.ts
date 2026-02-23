@@ -5,7 +5,7 @@ import { DiscordService } from './discord/discord.service';
 import { RequestService } from './request/request.service';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
-import { ProxyStoreService } from './proxy-manager/proxy-store.service';
+// import { ProxyStoreService } from './proxy-manager/proxy-store.service';
 import { PubsubService } from './pubsub/pubsub.service';
 import { DBService } from './database.service';
 @Global()
@@ -15,6 +15,7 @@ import { DBService } from './database.service';
     ErrorService,
     DiscordService,
     RequestService,
+    // ProxyStoreService,
     DBService,
     PubsubService,
   ],
@@ -22,6 +23,7 @@ import { DBService } from './database.service';
     UserAgentService,
     DiscordService,
     RequestService,
+    // ProxyStoreService,
     DBService,
   ],
 })

@@ -13,6 +13,7 @@ import { ShytttEmailModule } from './shyttt-email/shyttt-email.module';
 import { DailyWordsModule } from './daily_words/daily_words.module';
 import { ToPhoneticModule } from './to-phonetic/to-phonetic.module';
 import { CambridgeModule } from './cambridge/cambridge.module';
+import { ChatgptModule } from './chatgpt/chatgpt.module';
 @Module({
   imports: [
     SharedModule,
@@ -33,6 +34,7 @@ import { CambridgeModule } from './cambridge/cambridge.module';
     DailyWordsModule,
     ToPhoneticModule,
     CambridgeModule,
+    ChatgptModule,
   ],
   controllers: [AppController, UserController],
 

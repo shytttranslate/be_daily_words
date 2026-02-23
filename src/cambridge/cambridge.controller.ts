@@ -1,6 +1,8 @@
 import { Controller, Get, Param } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { CambridgeService } from './cambridge.service';
 
+@ApiTags('Cambridge')
 @Controller('cambridge')
 export class CambridgeController {
   constructor(private readonly cambridgeService: CambridgeService) {}

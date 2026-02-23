@@ -11,6 +11,12 @@ export default () => ({
       process.env.CAMBRIDGE_BASE_URL ||
       'https://dictionary.cambridge.org/vi/dictionary/english',
   },
+  chatgpt: {
+    apiKey: process.env.OPENAI_API_KEY ?? '',
+    model: process.env.CHATGPT_MODEL ?? 'gpt-4o-mini',
+    // Base URL only (no /chat/completions): SDK appends chat/completions automatically
+    baseUrl: process.env.OPENAI_BASE_URL ?? 'https://api.openai.com/v1',
+  },
   discord: {
     botToken: process.env.DISCORD_BOT_TOKEN,
     logChannel: process.env.DISCORD_LOG_CHANNEL,
@@ -21,5 +27,9 @@ export default () => ({
   proxyRedis: {
     host: process.env.PROXY_REDIS_HOST,
     port: process.env.PROXY_REDIS_PORT,
+  },
+  aibitranslator: {
+    apiKey:
+      process.env.AIBIT_API_KEY
   },
 });

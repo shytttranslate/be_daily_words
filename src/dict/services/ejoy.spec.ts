@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { GCEModule } from '~@/google/gce/gce.module';
 
 import { SharedModule } from '~@/shared/shared.module';
 import { TestModule } from '~@/shared/test/test.module';
@@ -10,7 +9,7 @@ describe('Ejoy Spec', () => {
   let ejoyService: EjoyService;
   beforeAll(async () => {
     module = await Test.createTestingModule({
-      imports: [SharedModule, TestModule, GCEModule],
+      imports: [SharedModule, TestModule],
       providers: [EjoyService],
     }).compile();
     ejoyService = module.get<EjoyService>(EjoyService);

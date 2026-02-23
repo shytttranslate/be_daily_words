@@ -1,9 +1,11 @@
 import { BadRequestException, Body, Controller, Inject, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '~@/entities/User.entity';
 import { DBService } from '~@/shared/database.service';
 
+@ApiTags('User')
 @Controller({
   path: '/user',
   version: '1',

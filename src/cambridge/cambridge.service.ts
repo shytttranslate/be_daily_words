@@ -111,96 +111,10 @@ export class CambridgeService {
   /**
    * Lấy dữ liệu từ ejoy API, ghi full JSON ra file, trả về: level (phổ biến nhất), tối đa 3 ví dụ, phonetics & sound.
    */
-  async getWordByEjoy(
-    word: string,
-    outputDir: string = path.join(process.cwd(), 'output'),
-  ): Promise<EjoyWordResult> {
-    const keyHashStr = this._hash(word, this.keyHash);
-    const { data } = await axios.get<Record<string, unknown>>(
-      `https://dics.ejoyspace.com/vocab/word?id=${encodeURIComponent(word)}&key=${keyHashStr}`,
-      { timeout: 10000 },
-    );
-    const jsonData = typeof data === 'object' && data !== null ? data : { raw: data };
 
-    fs.mkdirSync(outputDir, { recursive: true });
-    const filePath = path.join(outputDir, `ejoy-${encodeURIComponent(word)}.json`);
-    fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), 'utf-8');
 
-    return this.toEjoyWordResult(word, jsonData);
-  }
 
-  /**
-   * Rút gọn dữ liệu ejoy: level xuất hiện nhiều nhất, tối đa 3 examples, uk/us pronun & sound.
-   */
-  toEjoyWordResult(word: string, jsonData: Record<string, unknown>): EjoyWordResult {
-    const level = this.getMostCommonLevel(jsonData);
-    const examples = this.collectExamples(jsonData).slice(0, 3);
-    const phonetics = {
-      uk_pronun: jsonData.uk_pronun as string | undefined,
-      uk_sound: jsonData.uk_sound as string | undefined,
-      us_pronun: jsonData.us_pronun as string | undefined,
-      us_sound: jsonData.us_sound as string | undefined,
-      grammar: jsonData.grammar as string | undefined,
-    };
-    return { word, level, examples, phonetics };
-  }
 
-  /** Thu thập tất cả level từ dict.us_dict / dict.uk_dict → defs[].level, trả về level có số lần xuất hiện nhiều nhất. */
-  private getMostCommonLevel(jsonData: Record<string, unknown>): string | null {
-    const counts: Record<string, number> = {};
-    const dict = jsonData.dict as Record<string, unknown> | undefined;
-    if (!dict) return null;
 
-    for (const key of ['us_dict', 'uk_dict']) {
-      const arr = dict[key] as Array<Record<string, unknown>> | undefined;
-      if (!Array.isArray(arr)) continue;
-      for (const entry of arr) {
-        const senses = entry.senses as Array<Record<string, unknown>> | undefined;
-        if (!Array.isArray(senses)) continue;
-        for (const sense of senses) {
-          const defs = sense.defs as Array<Record<string, unknown>> | undefined;
-          if (!Array.isArray(defs)) continue;
-          for (const def of defs) {
-            const lv = (def.level as string)?.trim?.() || '';
-            if (lv) counts[lv] = (counts[lv] || 0) + 1;
-          }
-        }
-      }
-    }
 
-    let maxCount = 0;
-    let result: string | null = null;
-    for (const [lv, c] of Object.entries(counts)) {
-      if (c > maxCount) {
-        maxCount = c;
-        result = lv;
-      }
-    }
-    return result;
-  }
-
-  /** Thu thập tất cả example từ dict.*.senses[].defs[].example (mảng chuỗi), flatten. */
-  private collectExamples(jsonData: Record<string, unknown>): string[] {
-    const out: string[] = [];
-    const dict = jsonData.dict as Record<string, unknown> | undefined;
-    if (!dict) return out;
-
-    for (const key of ['us_dict', 'uk_dict']) {
-      const arr = dict[key] as Array<Record<string, unknown>> | undefined;
-      if (!Array.isArray(arr)) continue;
-      for (const entry of arr) {
-        const senses = entry.senses as Array<Record<string, unknown>> | undefined;
-        if (!Array.isArray(senses)) continue;
-        for (const sense of senses) {
-          const defs = sense.defs as Array<Record<string, unknown>> | undefined;
-          if (!Array.isArray(defs)) continue;
-          for (const def of defs) {
-            const ex = def.example as string[] | undefined;
-            if (Array.isArray(ex)) out.push(...ex.filter((s) => typeof s === 'string' && s.trim()));
-          }
-        }
-      }
-    }
-    return [...new Set(out)];
-  }
 }

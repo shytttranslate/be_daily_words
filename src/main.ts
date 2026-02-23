@@ -3,6 +3,7 @@ dotenvSafe.config();
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import express from 'express';
 import { DiscordService } from './shared/discord/discord.service';
 import { ShytttLogger } from './shared/logger/AppLogger';
@@ -28,6 +29,15 @@ async function bootstrap() {
     }),
   );
   app.useGlobalPipes(new ValidationPipe());
+
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle('Be Daily Words API')
+    .setDescription('API documentation for Be Daily Words')
+    .setVersion('1.0')
+    .build();
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api/docs', app, document);
+
   const discordService = app.get(DiscordService);
   app.useLogger(new ShytttLogger(discordService));
   await app.listen(process.env.PORT);
