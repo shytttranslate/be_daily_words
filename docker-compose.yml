@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   app:
-    container_name: aibit-api
+    container_name: daily_words
     build: .
     working_dir: /app
     ports:
