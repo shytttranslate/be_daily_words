@@ -1,10 +1,19 @@
 # Single container: NestJS API + Python word-difficulty (cefrpy + SUBTLEX)
 FROM node:20-bookworm-slim AS node-builder
+# Build tools cho native modules (node-curl-impersonate, pg, etc.)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    make \
+    g++ \
+    libcurl4-openssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
-COPY package*.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
 RUN npm run build
+RUN npm prune --production
 
 # Final image: Node + Python
 FROM node:20-bookworm-slim
@@ -17,9 +26,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# NestJS
-COPY package*.json ./
-RUN npm install --omit=dev
+# NestJS — copy từ builder để không cần build lại native modules trong stage này
+COPY package.json package-lock.json ./
+COPY --from=node-builder /app/node_modules ./node_modules
 COPY --from=node-builder /app/dist ./dist
 
 # Python word_difficulty (cefrpy + SUBTLEX)
