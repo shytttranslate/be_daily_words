@@ -43,8 +43,8 @@ export class DailyWordsService {
   }
 
   async sendEmail(body) {
-    await this._send(body)
-    console.log('completed')
+    await this._send(body);
+    console.log('completed');
   }
   private async _send(body) {
     const transporter = nodemailer.createTransport({

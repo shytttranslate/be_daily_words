@@ -61,24 +61,18 @@ export class ChatgptService {
     this.model = this.config.get<string>('chatgpt.model') ?? 'gpt-4o-mini';
     this.client = apiKey
       ? new OpenAI({
-        apiKey,
-        ...(baseURL && { baseURL }),
-      })
+          apiKey,
+          ...(baseURL && { baseURL }),
+        })
       : null;
   }
 
   /**
    * Gửi tin nhắn đến ChatGPT (OpenAI Chat Completions API).
    */
-  async chat(
-    messages: ChatMessage[],
-    options: ChatCompletionOptions = {},
-  ): Promise<ChatCompletionResult> {
+  async chat(messages: ChatMessage[], options: ChatCompletionOptions = {}): Promise<ChatCompletionResult> {
     if (!this.client) {
-      throw new HttpException(
-        { error: 'chatgpt_not_configured', message: 'OPENAI_API_KEY is not set' },
-        503,
-      );
+      throw new HttpException({ error: 'chatgpt_not_configured', message: 'OPENAI_API_KEY is not set' }, 503);
     }
 
     try {
@@ -91,10 +85,7 @@ export class ChatgptService {
 
       const choice = response.choices?.[0];
       if (!choice?.message?.content) {
-        throw new HttpException(
-          { error: 'chatgpt_empty', message: 'No content in response' },
-          502,
-        );
+        throw new HttpException({ error: 'chatgpt_empty', message: 'No content in response' }, 502);
       }
 
       return {
@@ -102,19 +93,16 @@ export class ChatgptService {
         role: choice.message.role ?? 'assistant',
         usage: response.usage
           ? {
-            prompt_tokens: response.usage.prompt_tokens,
-            completion_tokens: response.usage.completion_tokens,
-            total_tokens: response.usage.total_tokens ?? 0,
-          }
+              prompt_tokens: response.usage.prompt_tokens,
+              completion_tokens: response.usage.completion_tokens,
+              total_tokens: response.usage.total_tokens ?? 0,
+            }
           : undefined,
       };
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : 'ChatGPT service error';
+      const message = err instanceof Error ? err.message : 'ChatGPT service error';
       const status =
-        err && typeof (err as { status?: number }).status === 'number'
-          ? (err as { status: number }).status
-          : 502;
+        err && typeof (err as { status?: number }).status === 'number' ? (err as { status: number }).status : 502;
       throw new HttpException({ error: 'chatgpt_error', message }, status);
     }
   }
@@ -151,12 +139,8 @@ export class ChatgptService {
    * Intent-based suggestions for English learners: từ input của user (có thể bất kỳ ngôn ngữ),
    * hiểu ý định và trả về đúng 5 gợi ý category/theme ngắn (tối đa 4 từ, tiếng Anh).
    */
-  async generateSuggestions(
-    userInput: string,
-    options?: ChatCompletionOptions,
-  ): Promise<string> {
-    const systemContent =
-      'You generate short learning-related suggestions.';
+  async generateSuggestions(userInput: string, options?: ChatCompletionOptions): Promise<string> {
+    const systemContent = 'You generate short learning-related suggestions.';
     const userContent = `You are an intent-based suggestion generator for English learners.
 
 User input:
@@ -208,5 +192,4 @@ Rules:
       options,
     );
   }
-
 }
