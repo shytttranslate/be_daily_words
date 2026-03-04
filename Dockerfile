@@ -1,5 +1,5 @@
 # Stage 1: build
-FROM node:16.19.1 AS builder
+FROM node:24.14.1 AS builder
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci --legacy-peer-deps
