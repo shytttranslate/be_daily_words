@@ -8,7 +8,7 @@ RUN npm run build
 RUN npm prune --omit=dev --legacy-peer-deps
 
 # Stage 2: run
-FROM node:16.19.1
+FROM node:24.14.0
 RUN npm install pm2 -g
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
